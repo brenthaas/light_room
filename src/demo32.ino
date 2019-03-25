@@ -2,46 +2,6 @@
 
 FASTLED_USING_NAMESPACE
 
-
-//
-// CRGB leds[NUM_STRIPS][NUM_VERT_LEDS_PER_STRIP];
-//
-// // For mirroring strips, all the "special" stuff happens just in setup.  We
-// // just addLeds multiple times, once for each strip
-// void setup() {
-//   // tell FastLED there's 60 NEOPIXEL leds on pin 10
-//   FastLED.addLeds<NEOPIXEL, 10>(leds[0], NUM_VERT_LEDS_PER_STRIP);
-//
-//   // tell FastLED there's 60 NEOPIXEL leds on pin 11
-//   FastLED.addLeds<NEOPIXEL, 11>(leds[1], NUM_VERT_LEDS_PER_STRIP);
-//
-//   // tell FastLED there's 60 NEOPIXEL leds on pin 12
-//   FastLED.addLeds<NEOPIXEL, 12>(leds[2], NUM_VERT_LEDS_PER_STRIP);
-//
-// }
-//
-// void loop() {
-//   // This outer loop will go over each strip, one at a time
-//   for(int x = 0; x < NUM_STRIPS; x++) {
-//     // This inner loop will go over each led in the current strip, one at a time
-//     for(int i = 0; i < NUM_VERT_LEDS_PER_STRIP; i++) {
-//       leds[x][i] = CRGB::Red;
-//       FastLED.show();
-//       leds[x][i] = CRGB::Black;
-//       delay(100);
-//     }
-//   }
-// }
-
-// FastLED "100-lines-of-code" demo reel, showing just a few
-// of the kinds of animation patterns you can quickly and easily
-// compose using FastLED.
-//
-// This example also shows one easy way to define multiple
-// animations patterns and have them automatically rotate.
-//
-// -Mark Kriegsman, December 2014
-
 #if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3001000)
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
@@ -61,11 +21,9 @@ FASTLED_USING_NAMESPACE
 #define NUM_VERT_STRIPS  2
 #define NUM_HORIZ_STRIPS 1
 
-// #define NUM_VERT_LEDS  60
-#define NUM_VERT_LEDS  360
-#define NUM_HORIZ_LEDS 120
+#define TOTAL_LEDS  360
 
-CRGB leds[NUM_VERT_LEDS];
+CRGB leds[TOTAL_LEDS];
 
 #define BRIGHTNESS         40
 #define FRAMES_PER_SECOND  60
@@ -120,7 +78,7 @@ void setup() {
   delay(3000); // 3 second delay for recovery
   Serial.begin(115200);
 
-  // FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_VERT_LEDS).setCorrection(TypicalLEDStrip);
+  // FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, TOTAL_LEDS).setCorrection(TypicalLEDStrip);
 
   // tell FastLED about the LED strip configuration
   // Add Left Vertical strip LEDs
@@ -178,7 +136,7 @@ void nextPattern()
 void rainbow()
 {
   // FastLED's built-in rainbow generator
-  fill_rainbow( leds, NUM_VERT_LEDS, gHue, 7);
+  fill_rainbow( leds, TOTAL_LEDS, gHue, 7);
 }
 
 void rainbowWithGlitter()
@@ -191,23 +149,23 @@ void rainbowWithGlitter()
 void addGlitter( fract8 chanceOfGlitter)
 {
   if( random8() < chanceOfGlitter) {
-    leds[ random16(NUM_VERT_LEDS) ] += CRGB::White;
+    leds[ random16(TOTAL_LEDS) ] += CRGB::White;
   }
 }
 
 void confetti()
 {
   // random colored speckles that blink in and fade smoothly
-  fadeToBlackBy( leds, NUM_VERT_LEDS, 10);
-  int pos = random16(NUM_VERT_LEDS);
+  fadeToBlackBy( leds, TOTAL_LEDS, 10);
+  int pos = random16(TOTAL_LEDS);
   leds[pos] += CHSV( gHue + random8(64), 200, 255);
 }
 
 void sinelon()
 {
   // a colored dot sweeping back and forth, with fading trails
-  fadeToBlackBy( leds, NUM_VERT_LEDS, 20);
-  int pos = beatsin16( 13, 0, NUM_VERT_LEDS-1 );
+  fadeToBlackBy( leds, TOTAL_LEDS, 20);
+  int pos = beatsin16( 13, 0, TOTAL_LEDS-1 );
   leds[pos] += CHSV( gHue, 255, 192);
 }
 
@@ -217,17 +175,17 @@ void bpm()
   uint8_t BeatsPerMinute = 62;
   CRGBPalette16 palette = PartyColors_p;
   uint8_t beat = beatsin8( BeatsPerMinute, 64, 255);
-  for( int i = 0; i < NUM_VERT_LEDS; i++) { //9948
+  for( int i = 0; i < TOTAL_LEDS; i++) { //9948
     leds[i] = ColorFromPalette(palette, gHue+(i*2), beat-gHue+(i*10));
   }
 }
 
 void juggle() {
   // eight colored dots, weaving in and out of sync with each other
-  fadeToBlackBy( leds, NUM_VERT_LEDS, 20);
+  fadeToBlackBy( leds, TOTAL_LEDS, 20);
   byte dothue = 0;
   for( int i = 0; i < 8; i++) {
-    leds[beatsin16( i+7, 0, NUM_VERT_LEDS-1 )] |= CHSV(dothue, 200, 255);
+    leds[beatsin16( i+7, 0, TOTAL_LEDS-1 )] |= CHSV(dothue, 200, 255);
     dothue += 32;
   }
 }
