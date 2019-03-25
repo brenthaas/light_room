@@ -68,7 +68,7 @@ FASTLED_USING_NAMESPACE
 CRGB leds[NUM_VERT_LEDS];
 
 #define BRIGHTNESS         40
-#define FRAMES_PER_SECOND  10
+#define FRAMES_PER_SECOND  60
 
 // -- The core to run FastLED.show()
 #define FASTLED_SHOW_CORE 0
@@ -146,7 +146,7 @@ void setup() {
 
 // List of patterns to cycle through.  Each is defined as a separate function below.
 typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = { rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm };
+SimplePatternList gPatterns = { rainbow };
 
 uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
